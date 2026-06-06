@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Computer Vision — Final Exam & Flashcards</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=IM+Fell+English:ital@0;1&family=Courier+Prime:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════
+   ROOT & RESET
+═══════════════════════════════════════════ */
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --paper:#faf6ee;
+  --paper2:#f3eddf;
+  --ink:#1a1208;
+  --ink2:#3d3020;
+  --ink3:#6b5b45;
+  --rule:#c8b89a;
+  --margin-line:#e8a090;
+  --red:#c0392b;
+  --green:#27654a;
+  --blue:#1a3a6b;
+  --gold:#b8860b;
+  --stamp-red:rgba(192,57,43,0.12);
+  --dark-bg:#0f0f14;
+  --dark-surface:#181820;
+  --dark-surface2:#1f1f2a;
+  --dark-border:#2e2e3d;
+  --card-front:#1e2030;
+  --card-back:#141625;
+  --neon:#7eb8f7;
+  --neon2:#f0a070;
+  --neon3:#7de8a0;
+}
+html{font-size:16px}
+body{background:var(--dark-bg);font-family:'Lato',sans-serif;min-height:100vh;overflow-x:hidden}
+
+/* ═══════════════════════════════════════════
+   NAV TAB BAR
+═══════════════════════════════════════════ */
+.nav-bar{
+  background:#09090e;
+  border-bottom:1px solid #1e1e28;
+  display:flex;
+  align-items:stretch;
+  padding:0 32px;
+  position:sticky;top:0;z-index:100;
+  box-shadow:0 2px 20px rgba(0,0,0,0.5);
+}
+.nav-brand{
+  font-family:'Courier Prime',monospace;
+  font-size:13px;
+  color:#4a4a60;
+  letter-spacing:2px;
+  display:flex;align-items:center;
+  padding-right:32px;
+  border-right:1px solid #1e1e28;
+  margin-right:24px;
+  text-transform:uppercase;
+}
+.nav-brand span{color:#7eb8f7}
+.nav-tab{
+  font-family:'Courier Prime',monospace;
+  font-size:12px;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  color:#4a4a60;
+  padding:18px 24px;
+  cursor:pointer;
+  border-bottom:2px solid transparent;
+  transition:all 0.2s;
+  display:flex;align-items:center;gap:8px;
+}
+.nav-tab:hover{color:#9090b0}
+.nav-tab.active{color:#f0f0ff;border-bottom-color:#7eb8f7}
+.nav-tab .tab-icon{font-size:15px}
+
+/* ═══════════════════════════════════════════
+   SECTION WRAPPERS
+═══════════════════════════════════════════ */
+.section{display:none}
+.section.active{display:block}
+
+/* ═══════════════════════════════════════════
+   EXAM SECTION — PAPER AESTHETIC
+═══════════════════════════════════════════ */
+#exam-section{
+  background:var(--paper);
+  min-height:100vh;
+  padding-bottom:80px;
+}
+
+/* Ruled lines background */
+#exam-section::before{
+  content:'';
+  position:fixed;top:52px;left:0;right:0;bottom:0;
+  background-image:repeating-linear-gradient(
+    transparent,transparent 31px,var(--rule) 31px,var(--rule) 32px
+  );
+  pointer-events:none;
+  z-index:0;
+  opacity:0.35;
+}
+
+/* Left margin line */
+#exam-section::after{
+  content:'';
+  position:fixed;top:52px;left:80px;bottom:0;
+  width:2px;
+  background:var(--margin-line);
+  pointer-events:none;
+  z-index:0;
+  opacity:0.5;
+}
+
+.exam-wrapper{
+  max-width:820px;
+  margin:0 auto;
+  padding:40px 40px 40px 100px;
+  position:relative;
+  z-index:1;
+}
+
+/* Exam Header */
+.exam-header{
+  border:2px solid var(--ink);
+  padding:24px 28px;
+  margin-bottom:36px;
+  background:var(--paper2);
+  position:relative;
+}
+.exam-header::before{
+  content:'CONFIDENTIAL — FOR EXAMINATION USE ONLY';
+  position:absolute;top:-10px;left:50%;transform:translateX(-50%);
+  font-family:'Courier Prime',monospace;font-size:9px;
+  letter-spacing:2px;color:var(--red);
+  background:var(--paper2);padding:0 8px;
+}
+.exam-uni{font-family:'Courier Prime',monospace;font-size:11px;letter-spacing:2px;color:var(--ink3);text-transform:uppercase;margin-bottom:8px}
+.exam-title{font-family:'Playfair Display',serif;font-size:26px;font-weight:700;color:var(--ink);line-height:1.2;margin-bottom:4px}
+.exam-sub{font-family:'IM Fell English',serif;font-style:italic;font-size:15px;color:var(--ink2);margin-bottom:16px}
+.exam-meta{display:flex;gap:32px;flex-wrap:wrap}
+.exam-meta-item{font-family:'Courier Prime',monospace;font-size:12px;color:var(--ink3)}
+.exam-meta-item strong{color:var(--ink)}
+
+/* Live Stats */
+.stats-bar{
+  display:flex;gap:0;margin-bottom:28px;
+  border:1.5px solid var(--ink);
+  overflow:hidden;
+  font-family:'Courier Prime',monospace;font-size:12px;
+}
+.stat-cell{
+  flex:1;padding:10px 12px;text-align:center;
+  border-right:1px solid var(--rule);
+}
+.stat-cell:last-child{border-right:none}
+.stat-cell .sv{font-size:20px;font-weight:700;font-family:'Playfair Display',serif;display:block}
+.stat-cell .sl{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--ink3)}
+.stat-answered .sv{color:var(--blue)}
+.stat-correct .sv{color:var(--green)}
+.stat-wrong .sv{color:var(--red)}
+.stat-remain .sv{color:var(--gold)}
+
+/* Progress */
+.progress-wrap{margin-bottom:32px}
+.progress-label{font-family:'Courier Prime',monospace;font-size:11px;color:var(--ink3);margin-bottom:6px;display:flex;justify-content:space-between}
+.progress-track{height:8px;background:var(--paper2);border:1px solid var(--rule);border-radius:0}
+.progress-fill{height:100%;background:var(--blue);transition:width 0.4s ease;border-radius:0}
+
+/* Section label */
+.section-label{
+  font-family:'Playfair Display',serif;font-size:18px;font-weight:700;
+  color:var(--ink);margin:40px 0 20px;
+  padding-bottom:6px;border-bottom:2px solid var(--ink);
+  display:flex;align-items:baseline;gap:12px;
+}
+.section-label span{font-size:12px;font-family:'Courier Prime',monospace;color:var(--ink3);font-weight:400}
+
+/* Question */
+.question{
+  margin-bottom:28px;
+  padding:20px 0;
+  border-bottom:1px dashed var(--rule);
+  position:relative;
+}
+.q-header{display:flex;align-items:flex-start;gap:14px;margin-bottom:14px}
+.q-num{
+  font-family:'Playfair Display',serif;font-size:20px;font-weight:700;
+  color:var(--ink);min-width:32px;line-height:1.2;
+}
+.q-text{font-family:'IM Fell English',serif;font-size:16px;line-height:1.7;color:var(--ink);flex:1}
+.q-text code{font-family:'Courier Prime',monospace;font-size:14px;background:rgba(0,0,0,0.06);padding:1px 5px;border-radius:2px}
+.diff-badge{
+  font-family:'Courier Prime',monospace;font-size:9px;letter-spacing:1.5px;
+  text-transform:uppercase;padding:3px 8px;border-radius:2px;
+  border:1px solid;white-space:nowrap;margin-top:2px;
+}
+.diff-easy{color:var(--green);border-color:var(--green);background:rgba(39,101,74,0.07)}
+.diff-medium{color:var(--gold);border-color:var(--gold);background:rgba(184,134,11,0.07)}
+.diff-hard{color:var(--red);border-color:var(--red);background:rgba(192,57,43,0.07)}
+
+/* MC Options */
+.options{display:flex;flex-direction:column;gap:6px;padding-left:46px}
+.opt{
+  display:flex;align-items:flex-start;gap:10px;
+  padding:9px 14px;
+  border:1px solid transparent;
+  cursor:pointer;
+  border-radius:2px;
+  transition:background 0.15s,border-color 0.15s;
+  font-family:'Lato',sans-serif;font-size:14.5px;line-height:1.5;color:var(--ink2);
+}
+.opt:hover:not(.locked){background:rgba(26,58,107,0.06);border-color:var(--rule)}
+.opt.locked{cursor:default}
+.opt-letter{
+  font-family:'Courier Prime',monospace;font-size:13px;color:var(--ink3);
+  min-width:20px;font-weight:700;
+}
+.opt.correct-opt{background:rgba(39,101,74,0.1);border-color:var(--green)!important}
+.opt.correct-opt .opt-letter{color:var(--green)}
+.opt.wrong-opt{background:rgba(192,57,43,0.08);border-color:var(--red)!important}
+.opt.wrong-opt .opt-letter{color:var(--red)}
+.opt.reveal-opt{background:rgba(39,101,74,0.06);border-color:rgba(39,101,74,0.3)!important}
+.opt.reveal-opt .opt-letter{color:var(--green)}
+
+/* TF */
+.tf-wrap{display:flex;gap:12px;padding-left:46px}
+.tf-btn{
+  padding:10px 28px;border:1.5px solid var(--rule);
+  font-family:'Courier Prime',monospace;font-size:13px;letter-spacing:1px;
+  font-weight:700;cursor:pointer;
+  background:var(--paper);color:var(--ink);
+  transition:all 0.15s;
+}
+.tf-btn:hover:not(.locked){background:var(--paper2);border-color:var(--ink)}
+.tf-btn.locked{cursor:default}
+.tf-btn.correct-opt{background:rgba(39,101,74,0.1);border-color:var(--green);color:var(--green)}
+.tf-btn.wrong-opt{background:rgba(192,57,43,0.08);border-color:var(--red);color:var(--red)}
+.tf-btn.reveal-opt{background:rgba(39,101,74,0.06);border-color:rgba(39,101,74,0.5);color:var(--green)}
+
+/* Feedback */
+.feedback{
+  margin-top:12px;margin-left:46px;
+  padding:12px 16px;
+  border-left:3px solid;
+  font-size:13.5px;line-height:1.7;
+  animation:fbIn 0.25s ease;
+}
+@keyframes fbIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+.feedback.fb-correct{border-color:var(--green);background:rgba(39,101,74,0.06);color:var(--ink2)}
+.feedback.fb-wrong{border-color:var(--red);background:rgba(192,57,43,0.05);color:var(--ink2)}
+.feedback strong{color:var(--ink)}
+.feedback .fb-head{font-family:'Courier Prime',monospace;font-size:11px;letter-spacing:1px;text-transform:uppercase;margin-bottom:5px}
+.feedback .fb-head.ch{color:var(--green)}
+.feedback .fb-head.fx{color:var(--red)}
+
+/* Submit button */
+.submit-row{margin-top:36px;text-align:center}
+.submit-btn{
+  font-family:'Courier Prime',monospace;font-size:13px;letter-spacing:2px;
+  text-transform:uppercase;padding:14px 48px;
+  background:var(--ink);color:var(--paper);border:none;cursor:pointer;
+  transition:background 0.2s,transform 0.1s;
+}
+.submit-btn:hover{background:var(--blue);transform:translateY(-1px)}
+.submit-btn:active{transform:translateY(0)}
+
+/* Score Banner */
+.score-banner{
+  margin-top:40px;padding:32px;
+  border:2px solid var(--ink);
+  background:var(--paper2);
+  text-align:center;
+  display:none;
+}
+.score-banner.show{display:block;animation:fbIn 0.4s ease}
+.sb-title{font-family:'Playfair Display',serif;font-size:14px;letter-spacing:3px;text-transform:uppercase;color:var(--ink3);margin-bottom:8px}
+.sb-score{font-family:'Playfair Display',serif;font-size:56px;font-weight:700;color:var(--ink);line-height:1}
+.sb-of{font-size:24px;color:var(--ink3)}
+.sb-grade{font-family:'Courier Prime',monospace;font-size:18px;font-weight:700;margin:8px 0;letter-spacing:2px}
+.sb-msg{font-family:'IM Fell English',serif;font-style:italic;font-size:15px;color:var(--ink2);margin-top:8px}
+
+/* ═══════════════════════════════════════════
+   FLASHCARD SECTION — DARK MODE
+═══════════════════════════════════════════ */
+#flash-section{
+  background:var(--dark-bg);
+  min-height:100vh;
+  padding-bottom:80px;
+}
+.flash-wrapper{max-width:860px;margin:0 auto;padding:40px 24px}
+
+.flash-header{
+  margin-bottom:36px;
+}
+.flash-title{
+  font-family:'Playfair Display',serif;font-size:32px;font-weight:700;
+  color:#e8e8f4;margin-bottom:4px;
+  letter-spacing:-0.3px;
+}
+.flash-sub{font-family:'Courier Prime',monospace;font-size:12px;letter-spacing:2px;color:#5050680;text-transform:uppercase;color:#505068}
+
+/* Filter buttons */
+.filter-bar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:32px}
+.filter-btn{
+  font-family:'Courier Prime',monospace;font-size:11px;letter-spacing:1.5px;
+  text-transform:uppercase;padding:6px 14px;
+  border:1px solid var(--dark-border);
+  background:var(--dark-surface);color:#6060780;color:#606078;
+  cursor:pointer;border-radius:2px;
+  transition:all 0.2s;
+}
+.filter-btn:hover{border-color:#404058;color:#9090b0}
+.filter-btn.active{background:var(--neon);color:#0a0a14;border-color:var(--neon);font-weight:700}
+
+/* Flash progress */
+.flash-progress{margin-bottom:28px}
+.flash-prog-label{
+  display:flex;justify-content:space-between;
+  font-family:'Courier Prime',monospace;font-size:11px;color:#505068;
+  margin-bottom:8px;
+}
+.flash-prog-track{height:3px;background:var(--dark-surface2);border-radius:100px}
+.flash-prog-fill{height:100%;background:var(--neon);border-radius:100px;transition:width 0.3s ease}
+
+/* Navigation */
+.flash-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px}
+.flash-nav-btn{
+  font-family:'Courier Prime',monospace;font-size:12px;letter-spacing:1px;
+  padding:10px 24px;border:1px solid var(--dark-border);
+  background:var(--dark-surface);color:#7070890;color:#707089;
+  cursor:pointer;transition:all 0.2s;
+}
+.flash-nav-btn:hover{border-color:var(--neon);color:var(--neon)}
+.flash-nav-btn:disabled{opacity:0.3;cursor:default}
+.flash-counter{font-family:'Courier Prime',monospace;font-size:13px;color:#505068}
+.flash-counter span{color:#e8e8f4}
+.flip-hint{font-family:'Courier Prime',monospace;font-size:10px;letter-spacing:1.5px;color:#404055;text-align:center;text-transform:uppercase;margin-bottom:16px}
+
+/* Card */
+.card-scene{
+  perspective:1400px;
+  height:340px;
+  margin-bottom:24px;
+  cursor:pointer;
+}
+.card-scene:focus{outline:none}
+.card-inner{
+  width:100%;height:100%;
+  transform-style:preserve-3d;
+  transition:transform 0.55s cubic-bezier(0.4,0.2,0.2,1);
+  position:relative;
+}
+.card-scene.flipped .card-inner{transform:rotateY(180deg)}
+.card-face{
+  position:absolute;inset:0;
+  backface-visibility:hidden;
+  border-radius:4px;
+  padding:40px 48px;
+  display:flex;flex-direction:column;justify-content:center;
+}
+.card-front{
+  background:var(--card-front);
+  border:1px solid var(--dark-border);
+}
+.card-back{
+  background:var(--card-back);
+  border:1px solid var(--neon);
+  transform:rotateY(180deg);
+}
+.card-topic{
+  font-family:'Courier Prime',monospace;font-size:10px;letter-spacing:2px;
+  text-transform:uppercase;color:#404058;margin-bottom:20px;
+}
+.card-front .card-topic{color:#404058}
+.card-back .card-topic{color:var(--neon);opacity:0.7}
+.card-q{
+  font-family:'Playfair Display',serif;font-size:20px;font-weight:600;
+  color:#d8d8ee;line-height:1.5;
+}
+.card-a{
+  font-family:'Lato',sans-serif;font-size:15px;line-height:1.8;
+  color:#b0b0c8;
+}
+.card-a strong{color:#e8e8f4}
+.card-a code{
+  font-family:'Courier Prime',monospace;font-size:13px;
+  background:rgba(126,184,247,0.1);color:var(--neon);
+  padding:1px 6px;border-radius:2px;
+}
+.card-front-icon{
+  position:absolute;bottom:24px;right:28px;
+  font-size:20px;opacity:0.15;
+}
+
+/* Keyboard hint */
+.key-hints{
+  display:flex;justify-content:center;gap:20px;
+  margin-top:20px;
+}
+.key-hint{
+  display:flex;align-items:center;gap:6px;
+  font-family:'Courier Prime',monospace;font-size:11px;color:#404055;
+}
+.key{
+  background:var(--dark-surface2);border:1px solid var(--dark-border);
+  border-radius:3px;padding:2px 7px;font-size:11px;
+}
+
+/* Studied count */
+.studied-bar{
+  display:flex;gap:20px;justify-content:center;
+  margin-top:28px;
+}
+.studied-stat{
+  font-family:'Courier Prime',monospace;font-size:11px;color:#505068;
+  text-align:center;
+}
+.studied-stat span{display:block;font-size:22px;font-weight:700;font-family:'Playfair Display',serif;color:#7070890;color:#707089;margin-bottom:2px}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav-bar">
+  <div class="nav-brand">CV · <span>Object Detection</span></div>
+  <div class="nav-tab active" onclick="switchTab('exam')" id="tab-exam">
+    <span class="tab-icon">📋</span> Final Exam
+  </div>
+  <div class="nav-tab" onclick="switchTab('flash')" id="tab-flash">
+    <span class="tab-icon">🃏</span> Flashcards
+  </div>
+</nav>
+
+<!-- ══════════════════════════════════
+     EXAM SECTION
+══════════════════════════════════ -->
+<div id="exam-section" class="section active">
+<div class="exam-wrapper">
+
+  <!-- Header -->
+  <div class="exam-header">
+    <div class="exam-uni">Jordan University of Science and Technology · Dept. of Computer Science & AI</div>
+    <div class="exam-title">Final Examination — Computer Vision (AI 447)</div>
+    <div class="exam-sub">Chapter: Object Detection — R-CNN Family, IoU, NMS, mAP, Faster R-CNN</div>
+    <div class="exam-meta">
+      <div class="exam-meta-item">Time Allowed: <strong>2 Hours</strong></div>
+      <div class="exam-meta-item">Total Marks: <strong>30</strong></div>
+      <div class="exam-meta-item">Section A: <strong>20 MCQ</strong></div>
+      <div class="exam-meta-item">Section B: <strong>10 T/F</strong></div>
+      <div class="exam-meta-item">Calculator: <strong>Permitted</strong></div>
+    </div>
+  </div>
+
+  <!-- Live Stats -->
+  <div class="stats-bar" id="statsBar">
+    <div class="stat-cell stat-answered"><span class="sv" id="s-ans">0</span><span class="sl">Answered</span></div>
+    <div class="stat-cell stat-correct"><span class="sv" id="s-cor">0</span><span class="sl">Correct</span></div>
+    <div class="stat-cell stat-wrong"><span class="sv" id="s-wrg">0</span><span class="sl">Wrong</span></div>
+    <div class="stat-cell stat-remain"><span class="sv" id="s-rem">30</span><span class="sl">Remaining</span></div>
+  </div>
+
+  <!-- Progress -->
+  <div class="progress-wrap">
+    <div class="progress-label"><span>Progress</span><span id="prog-pct">0%</span></div>
+    <div class="progress-track"><div class="progress-fill" id="progFill" style="width:0%"></div></div>
+  </div>
+
+  <!-- Section A -->
+  <div class="section-label">Section A — Multiple Choice <span>20 Questions · 1 mark each</span></div>
+  <div id="mcq-container"></div>
+
+  <!-- Section B -->
+  <div class="section-label">Section B — True / False <span>10 Questions · 1 mark each</span></div>
+  <div id="tf-container"></div>
+
+  <!-- Submit -->
+  <div class="submit-row">
+    <button class="submit-btn" onclick="submitExam()">Submit Examination</button>
+  </div>
+
+  <!-- Score Banner -->
+  <div class="score-banner" id="scoreBanner">
+    <div class="sb-title">Examination Result</div>
+    <div class="sb-score"><span id="sb-num">0</span><span class="sb-of">/30</span></div>
+    <div class="sb-grade" id="sb-grade"></div>
+    <div class="sb-msg" id="sb-msg"></div>
+  </div>
+
+</div>
+</div>
+
+<!-- ══════════════════════════════════
+     FLASHCARD SECTION
+══════════════════════════════════ -->
+<div id="flash-section" class="section">
+<div class="flash-wrapper">
+  <div class="flash-header">
+    <div class="flash-title">Concept Flashcards</div>
+    <div class="flash-sub">Object Detection — 20 cards · click to flip · arrows to navigate</div>
+  </div>
+
+  <div class="filter-bar" id="filterBar"></div>
+
+  <div class="flash-progress">
+    <div class="flash-prog-label">
+      <span id="fl-label">Card 1 of 20</span>
+      <span id="fl-studied">0 studied</span>
+    </div>
+    <div class="flash-prog-track"><div class="flash-prog-fill" id="flProgFill" style="width:0%"></div></div>
+  </div>
+
+  <div class="flip-hint">Click card or press SPACE to flip</div>
+
+  <div class="flash-nav">
+    <button class="flash-nav-btn" id="prevBtn" onclick="flashNav(-1)" disabled>← Prev</button>
+    <div class="flash-counter">Card <span id="fl-cur">1</span> / <span id="fl-tot">20</span></div>
+    <button class="flash-nav-btn" id="nextBtn" onclick="flashNav(1)">Next →</button>
+  </div>
+
+  <div class="card-scene" id="cardScene" tabindex="0" onclick="flipCard()" onkeydown="handleCardKey(event)">
+    <div class="card-inner" id="cardInner">
+      <div class="card-face card-front" id="cardFront">
+        <div class="card-topic" id="cTopicF"></div>
+        <div class="card-q" id="cQuestion"></div>
+        <div class="card-front-icon">?</div>
+      </div>
+      <div class="card-face card-back" id="cardBack">
+        <div class="card-topic" id="cTopicB"></div>
+        <div class="card-a" id="cAnswer"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="key-hints">
+    <div class="key-hint"><span class="key">←</span><span class="key">→</span> Navigate</div>
+    <div class="key-hint"><span class="key">Space</span> Flip</div>
+  </div>
+
+  <div class="studied-bar">
+    <div class="studied-stat"><span id="fl-seen">0</span>Seen</div>
+    <div class="studied-stat"><span id="fl-unseen" style="color:var(--neon2)">20</span>Unseen</div>
+  </div>
+</div>
+</div>
+
+<script>
+/* ══════════════════════
+   TAB SWITCHING
+══════════════════════ */
+function switchTab(tab){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById(tab+'-section').classList.add('active');
+  document.getElementById('tab-'+tab).classList.add('active');
+}
+
+/* ══════════════════════
+   EXAM DATA
+══════════════════════ */
+const MCQ = [
+  {
+    n:1, diff:'easy',
+    q:'What are the two mandatory predictions for each detected object in object detection?',
+    opts:['Confidence score and class probabilities','Class label and bounding box (x, y, w, h)','Segmentation mask and class label','Bounding box and pixel-level features'],
+    ans:1,
+    fb_correct:'Correct. Object detection outputs a <strong>category label</strong> (from a fixed class set) and a <strong>bounding box</strong> parameterised as (x, y, width, height), where (x,y) is the top-left corner. These two outputs define "what" and "where" respectively.',
+    fb_wrong:'Incorrect. The two core outputs are the <strong>class label</strong> (classification) and the <strong>bounding box</strong> (localisation as x, y, w, h). Confidence scores are derived from the softmax output — they are not one of the two primary predictions, and segmentation is a separate task.'
+  },
+  {
+    n:2, diff:'easy',
+    q:'Why does object detection require higher input resolution than image classification?',
+    opts:['Classification networks are not pretrained on high-resolution data','Objects must be precisely localised, requiring ~800×600 vs the 224×224 typical for classification','Higher resolution reduces overfitting during training','Detection models have more parameters and need more input data'],
+    ans:1,
+    fb_correct:'Correct. Classification only needs to recognise the dominant subject — 224×224 suffices. Detection must accurately <strong>localise</strong> every object including small ones, which demands the higher detail found at ~800×600 resolution.',
+    fb_wrong:'Incorrect. The reason is purely about <strong>localisation precision</strong>. At 224×224, small objects lose too much spatial detail for their bounding boxes to be accurately predicted. Detection therefore typically operates at resolutions around 800×600.'
+  },
+  {
+    n:3, diff:'medium',
+    q:'A standard CNN backbone is pretrained on ImageNet for classification, producing a 4096-d feature vector. In single-object detection, two parallel FC heads branch from this vector. Which combination correctly describes their output dimensions and loss functions?',
+    opts:['Class head: 4096→C with Cross-entropy; Box head: 4096→4 with Softmax loss','Class head: 4096→1000 with Softmax loss; Box head: 4096→4 with L2 loss','Class head: 4096→4 with L2 loss; Box head: 4096→1000 with Softmax loss','Class head: 4096→1000 with L2 loss; Box head: 4096→4 with Cross-entropy'],
+    ans:1,
+    fb_correct:'Correct. The <strong>classification head</strong> maps 4096→C (e.g. 1000 classes) and uses Softmax loss. The <strong>localisation head</strong> maps 4096→4 coordinates and uses L2 (regression) loss. Both losses are combined via a weighted multitask loss.',
+    fb_wrong:'Incorrect. Localisation is a <strong>regression problem</strong>, so it uses L2 loss on the 4 coordinates. Classification uses Softmax loss on the class scores. Swapping or mixing these is a fundamental error in understanding multitask detection objectives.'
+  },
+  {
+    n:4, diff:'hard',
+    q:'For an image of dimensions H×W, the exact total number of possible bounding boxes (considering all positions and sizes) is given by which closed-form expression?',
+    opts:['H × W × H × W','(H+1)(W+1)/4','H(H+1)/2 · W(W+1)/2','H²W²/4'],
+    ans:2,
+    fb_correct:'Correct. For a box of height h and width w, there are (H−h+1)(W−w+1) positions. Summing over all h∈[1,H] and w∈[1,W] yields <strong>H(H+1)/2 · W(W+1)/2</strong>. For 800×600: (600×601/2)×(800×801/2) ≈ 58 million.',
+    fb_wrong:'Incorrect. The derivation: fix box size h×w → (H−h+1)(W−w+1) positions. Sum over all sizes: Σ_h Σ_w (H−h+1)(W−w+1) = [Σ_h(H−h+1)][Σ_w(W−w+1)] = H(H+1)/2 · W(W+1)/2. For 800×600 this gives ~58 million — making brute-force sliding window infeasible.'
+  },
+  {
+    n:5, diff:'medium',
+    q:'Selective Search is used as a region proposal method. Which property makes it practical compared to exhaustive sliding window search?',
+    opts:['It uses a deep neural network trained end-to-end','It produces exactly 50 high-quality proposals per image','It is a fast CPU heuristic that groups blob-like regions by colour/texture similarity, yielding ~2000 candidates in seconds','It runs on GPU and shares computation with the detection network'],
+    ans:2,
+    fb_correct:'Correct. Selective Search uses <strong>bottom-up hierarchical grouping</strong> based on colour, texture, size, and fill compatibility. It is a CPU heuristic — not learned — but fast enough to produce ~2000 candidate regions in a few seconds, reducing 58M candidates to 2000.',
+    fb_wrong:'Incorrect. Selective Search is a <strong>non-learned CPU heuristic</strong>, not a neural network. It produces approximately 2000 (not 50) proposals using colour/texture blob detection. Its GPU independence is a limitation, not a feature — this bottleneck later motivated the RPN in Faster R-CNN.'
+  },
+  {
+    n:6, diff:'hard',
+    q:'In R-CNN bounding box regression, the predicted transform (t_x, t_y, t_w, t_h) is applied to proposal (p_x, p_y, p_w, p_h). Which formula correctly computes the final box width b_w?',
+    opts:['b_w = p_w + t_w','b_w = p_w · t_w','b_w = p_w · exp(t_w)','b_w = exp(p_w · t_w)'],
+    ans:2,
+    fb_correct:'Correct. Width is computed as <strong>b_w = p_w · exp(t_w)</strong>. The exponential ensures b_w is always positive regardless of t_w\'s sign, and the log-space parameterisation makes the transform scale-invariant. Similarly b_h = p_h · exp(t_h).',
+    fb_wrong:'Incorrect. The formula <strong>b_w = p_w · exp(t_w)</strong> is correct. Using addition (p_w + t_w) could produce negative widths. The exponential guarantees positivity and provides a log-space scale transformation — shifting t_w by 1 multiplies the width by e, not by a fixed pixel amount.'
+  },
+  {
+    n:7, diff:'medium',
+    q:'What is the IoU between a predicted box [0,0,4,4] and a ground truth box [2,2,4,4] (format: x,y,w,h)?',
+    opts:['0.14','0.25','0.11','0.33'],
+    ans:0,
+    fb_correct:'Correct. Pred covers x:0→4, y:0→4 (area=16). GT covers x:2→6, y:2→6 (area=16). Intersection: x:2→4, y:2→4 → area=4. Union=16+16−4=28. <strong>IoU=4/28≈0.14</strong>. This is below the 0.5 threshold and would be labelled a False Positive.',
+    fb_wrong:'Incorrect. Work through it: pred box covers [0→4]×[0→4], GT covers [2→6]×[2→6]. Overlap region: x∈[2,4], y∈[2,4] → intersection area = 2×2 = 4. Union = 16+16−4 = 28. IoU = 4/28 ≈ <strong>0.14</strong>. Be careful to compute the actual overlap region coordinates.'
+  },
+  {
+    n:8, diff:'easy',
+    q:'Which statement best describes what Non-Max Suppression (NMS) achieves?',
+    opts:['It increases the confidence of high-scoring detections','It removes duplicate detections of the same object by suppressing lower-scoring overlapping boxes','It eliminates all boxes below a fixed confidence threshold before any IoU comparison','It merges overlapping boxes into a single average box'],
+    ans:1,
+    fb_correct:'Correct. NMS iteratively selects the highest-scoring box, then <strong>suppresses</strong> (removes) all other boxes with IoU > threshold — treating them as duplicates of the same object. It does not merge boxes or simply threshold by confidence alone.',
+    fb_wrong:'Incorrect. NMS does not merge boxes, nor does it simply threshold by confidence alone. It uses an <strong>iterative greedy algorithm</strong>: pick best box → remove boxes with high IoU overlap → repeat. "Non-Max" refers to suppressing everything that is not the local maximum scorer.'
+  },
+  {
+    n:9, diff:'hard',
+    q:'Given 5 dog detections with scores [0.99, 0.95, 0.90, 0.5, 0.10] and 3 ground truth boxes. After processing all 5 detections for the PR curve, detections 1,2,5 are TPs and 3,4 are FPs. What is the Precision and Recall at the point where detection 3 is processed?',
+    opts:['P=0.67, R=0.67','P=1.0, R=0.67','P=0.5, R=0.67','P=0.67, R=1.0'],
+    ans:0,
+    fb_correct:'Correct. After processing 3 detections (scores 0.99 ✓, 0.95 ✓, 0.90 ✗): TPs=2, total predictions=3, total GTs=3. <strong>Precision = 2/3 ≈ 0.67. Recall = 2/3 ≈ 0.67</strong>. Precision dropped because detection 3 was a FP; recall stayed at 0.67 since no new GT was found.',
+    fb_wrong:'Incorrect. At detection 3: cumulative TPs=2 (detections 1 and 2 matched GTs), cumulative predictions=3, total GTs=3. Precision = TP/(TP+FP) = 2/3 ≈ 0.67. Recall = TP/(TP+FN) = 2/3 ≈ 0.67. Detection 3 is a FP — it drops precision but cannot change recall since no new GT is matched.'
+  },
+  {
+    n:10, diff:'medium',
+    q:'Fast R-CNN\'s primary architectural innovation over R-CNN is:',
+    opts:['Using a deeper backbone (ResNet instead of AlexNet)','Running the CNN backbone once on the full image and extracting region features via RoI Pooling from the shared feature map','Replacing Selective Search with a learned Region Proposal Network','Using anchor boxes of multiple scales and aspect ratios'],
+    ans:1,
+    fb_correct:'Correct. Fast R-CNN runs the expensive backbone <strong>once</strong> on the full image, producing a shared feature map. Region features are extracted via RoI Pooling — not by running 2000 separate CNN passes. This reduces test time from ~49s to ~2.3s per image.',
+    fb_wrong:'Incorrect. The key innovation is <strong>shared backbone computation</strong>. R-CNN runs 2000 separate CNN forward passes (one per warped region). Fast R-CNN runs the backbone once, then extracts all region features from the shared feature map using RoI Pooling. Replacing Selective Search is Faster R-CNN\'s contribution.'
+  },
+  {
+    n:11, diff:'hard',
+    q:'In RoI Pooling, a projected RoI of size 5.7×8.3 cells on the feature map is to be divided into a 2×2 grid. After "snapping" to grid cells, the quantised region is 5×8. What is the known limitation this snapping introduces?',
+    opts:['The pooled features become too large for the FC layers','Quantisation error — a spatial misalignment between the RoI and the actual object boundary, later addressed by RoI Align','The feature map resolution becomes insufficient for small objects','Max pooling discards too much spatial information'],
+    ans:1,
+    fb_correct:'Correct. Snapping to integer grid coordinates introduces <strong>quantisation error</strong> — the pooled features no longer correspond precisely to the original proposal boundaries. This misalignment accumulates through two rounding steps and hurts performance on tasks requiring pixel-precise localisation (e.g. instance segmentation). RoI Align fixes this using bilinear interpolation.',
+    fb_wrong:'Incorrect. The limitation is <strong>quantisation/misalignment error</strong>. Rounding 5.7→5 and 8.3→8 shifts the feature region slightly from the true object. This is acceptable for classification but harmful for precise localisation. Mask R-CNN introduced RoI Align (bilinear interpolation, no rounding) to solve this.'
+  },
+  {
+    n:12, diff:'medium',
+    q:'COCO mAP is considered stricter than mAP@0.5. What specifically makes it stricter?',
+    opts:['It evaluates on 80 classes instead of 20','It averages mAP computed at IoU thresholds from 0.50 to 0.95 in steps of 0.05, demanding increasingly precise box alignment','It requires all detections to have confidence score > 0.9','It uses a different formula for computing the area under the PR curve'],
+    ans:1,
+    fb_correct:'Correct. COCO mAP = mean of mAP@{0.50, 0.55, 0.60, …, 0.95}. At IoU=0.95, boxes must be <strong>almost perfectly aligned</strong> with ground truth. A model scoring 0.77 at @0.5 might only score 0.40 for COCO mAP, revealing how often its boxes are imprecise.',
+    fb_wrong:'Incorrect. The strictness comes from <strong>averaging across multiple IoU thresholds</strong> (0.50 to 0.95). mAP@0.5 treats any box with IoU>0.5 as correct — fairly lenient. At IoU=0.95, even a slightly off box is wrong. COCO mAP rewards detectors that produce tightly fitted bounding boxes.'
+  },
+  {
+    n:13, diff:'hard',
+    q:'In Faster R-CNN\'s RPN, K=9 anchors are used at each of the 20×15 = 300 feature map locations. What are the correct output tensor shapes for the RPN\'s classification and regression branches?',
+    opts:['Classification: 1×20×15; Regression: 4×20×15','Classification: 9×20×15; Regression: 4×20×15','Classification: 9×20×15; Regression: 36×20×15','Classification: 18×20×15; Regression: 36×20×15'],
+    ans:2,
+    fb_correct:'Correct. For K=9 anchors at each location: the <strong>classification branch</strong> outputs one objectness score per anchor → K×H×W = 9×20×15. The <strong>regression branch</strong> outputs 4 transform values per anchor → 4K×H×W = 36×20×15. Total anchors = 9×300 = 2700.',
+    fb_wrong:'Incorrect. With K=9 anchors per location: classification = K scores per location = <strong>9×20×15</strong>. Regression = 4 offsets per anchor per location = <strong>4K×20×15 = 36×20×15</strong>. Option B is wrong because it gives only 4 regression values total (not per anchor). Option A uses K=1.'
+  },
+  {
+    n:14, diff:'medium',
+    q:'During RPN training, how are anchor boxes labelled for the binary classification task?',
+    opts:['Positive if IoU > 0.5 with any GT box; Negative otherwise','Positive if IoU ≥ 0.7; Negative if IoU ≤ 0.3; Ignored if in between','Positive only if the anchor centre falls inside a GT box','Positive if IoU > 0.5; all others are negative regardless of IoU'],
+    ans:1,
+    fb_correct:'Correct. RPN labelling: <strong>Positive</strong> if IoU ≥ 0.7 with any GT box. <strong>Negative</strong> if IoU ≤ 0.3. <strong>Ignored</strong> (not used in loss) if 0.3 < IoU < 0.7. This prevents ambiguous anchors from contributing to the classification loss.',
+    fb_wrong:'Incorrect. The RPN uses a <strong>three-way</strong> labelling scheme, not binary. Anchors with 0.3 < IoU < 0.7 are <strong>ignored</strong> — they are neither positive nor negative and do not contribute to the training loss. This prevents ambiguous cases from confusing the classifier.'
+  },
+  {
+    n:15, diff:'hard',
+    q:'A Fast R-CNN model with VGG16 backbone processes a 600×800 image. The backbone outputs a feature map with stride 16. An RoI proposal is at image coordinates (160, 96, 192, 160) in (x,y,w,h) format. What are the approximate feature map coordinates after projection (before snapping)?',
+    opts:['(10, 6, 12, 10)','(160, 96, 192, 160)','(5120, 3072, 6144, 5120)','(10, 6, 4, 4)'],
+    ans:0,
+    fb_correct:'Correct. Projection divides all coordinates by the stride (16): x=160/16=10, y=96/16=6, w=192/16=12, h=160/16=10. The projected RoI on the feature map is <strong>(10, 6, 12, 10)</strong>. This is before snapping to integer grid cells.',
+    fb_wrong:'Incorrect. Projection divides all image coordinates by the backbone stride. With stride=16: x=160÷16=10, y=96÷16=6, w=192÷16=12, h=160÷16=10. Result: <strong>(10, 6, 12, 10)</strong>. The feature map is 1/16 the spatial size of the input image, so all coordinates scale down by a factor of 16.'
+  },
+  {
+    n:16, diff:'easy',
+    q:'What does AP = 1.0 require in the context of mean Average Precision evaluation?',
+    opts:['Every prediction must have a confidence score above 0.9','All ground truth boxes must be detected with IoU > 0.5 AND no false positive should be ranked above any true positive','The model must achieve 100% recall even if some predictions are wrong','Precision must remain 1.0 at all recall levels above 0.5'],
+    ans:1,
+    fb_correct:'Correct. AP=1.0 requires two simultaneous conditions: <strong>(1)</strong> every GT box is detected (IoU > threshold) achieving Recall=1.0, and <strong>(2)</strong> no FP appears before any TP in the score-ranked list (Precision stays 1.0 throughout). Any FP ranked above a TP causes the PR curve to dip below 1.0.',
+    fb_wrong:'Incorrect. AP=1.0 requires <strong>both perfect recall and perfect ranking</strong>. The model must find every GT object AND rank all its correct detections above any false alarms. A model with 100% recall but FPs interleaved with TPs will have AP < 1.0 because precision drops whenever an FP is encountered.'
+  },
+  {
+    n:17, diff:'medium',
+    q:'Faster R-CNN trains four losses jointly. Which set correctly identifies all four?',
+    opts:['RPN cls, RPN reg, Detection cls, Detection reg','RPN cls, RPN reg, NMS loss, Detection cls','Backbone loss, RPN cls, Detection cls, Detection reg','RPN cls, RPN reg, RoI Pool loss, Detection reg'],
+    ans:0,
+    fb_correct:'Correct. The four jointly-trained losses are: <strong>RPN classification</strong> (anchor objectness), <strong>RPN regression</strong> (anchor refinement), <strong>Detection classification</strong> (final class), and <strong>Detection regression</strong> (final box refinement). NMS is not differentiable and is not a learned loss.',
+    fb_wrong:'Incorrect. The correct four are <strong>RPN classification + RPN regression + Detection classification + Detection regression</strong>. NMS is a post-processing step (not differentiable, not a loss). RoI Pooling is an operation, not a loss. The backbone itself does not have a separate loss — it is updated through backpropagation of the other four losses.'
+  },
+  {
+    n:18, diff:'hard',
+    q:'In the bounding box regression formula b_x = p_x + p_w · t_x, the term p_w multiplies t_x rather than using an additive absolute offset. What is the primary motivation for this design choice?',
+    opts:['It makes the gradient computation simpler during backpropagation','The shift t_x is relative to the box width, making the transform scale-invariant — a t_x=1 shift moves the box by exactly one box-width regardless of its absolute size','It prevents the predicted box from extending outside the image boundaries','It matches the log-space parameterisation used for width and height'],
+    ans:1,
+    fb_correct:'Correct. Multiplying by p_w makes the translation <strong>scale-relative</strong>. If t_x = 0.5, the box shifts by half its width — the same fractional displacement whether the box is 50px or 500px wide. This normalisation makes it easier for the network to learn consistent transforms across boxes of very different sizes.',
+    fb_wrong:'Incorrect. The design is about <strong>scale invariance</strong>. An absolute shift (p_x + t_x) would mean t_x = 10 shifts a small 20px box by 50% of its width but a large 200px box by only 5%. By multiplying by p_w, the same t_x value produces the same proportional shift regardless of box size — much easier for the network to generalise.'
+  },
+  {
+    n:19, diff:'medium',
+    q:'When using AlexNet in Fast R-CNN, which layers form the backbone and which form the per-region network?',
+    opts:['All conv layers = backbone; all FC layers = per-region','First 5 conv layers = backbone; last 2 FC layers = per-region network','First 3 conv layers = backbone; last 2 conv + all FC = per-region','All conv + FC1 = backbone; only FC2 = per-region'],
+    ans:1,
+    fb_correct:'Correct. AlexNet is split at the conv/FC boundary: <strong>conv1–conv5 form the backbone</strong> (run once on the full image) and the <strong>last two FC layers form the per-region network</strong> (run once per RoI on the pooled features). This split maximises shared computation.',
+    fb_wrong:'Incorrect. The split in Fast R-CNN with AlexNet is: <strong>5 conv layers → backbone</strong> (shared, run once), <strong>2 FC layers → per-region network</strong> (lightweight, run per RoI). Early conv layers learn general features applicable to the whole image; late FC layers need to specialise per region.'
+  },
+  {
+    n:20, diff:'hard',
+    q:'A detector achieves mAP@0.5 = 0.77 and COCO mAP = 0.40. What does the large gap between these two scores most likely indicate about the detector?',
+    opts:['The detector performs well on small objects but poorly on large ones','The detector finds most objects (high recall) but its bounding boxes are imprecise — they pass the lenient IoU=0.5 threshold but fail stricter thresholds','The detector has high precision but low recall across all categories','The backbone network is too shallow for the task'],
+    ans:1,
+    fb_correct:'Correct. mAP@0.5=0.77 means the detector finds objects with roughly correct boxes (IoU>0.5). COCO mAP=0.40 includes strict thresholds up to IoU=0.95. The large gap reveals the detector\'s <strong>bounding boxes are imprecise</strong> — good enough for loose matching but poor when tight alignment is required.',
+    fb_wrong:'Incorrect. The gap between mAP@0.5 and COCO mAP diagnoses <strong>box precision</strong>. High mAP@0.5 means objects are found; low COCO mAP means the boxes don\'t align tightly. The model classifies objects well but the box regression head produces boxes that pass the lenient 0.5 threshold but fail at 0.7, 0.8, 0.9, 0.95.'
+  }
+];
+
+const TF = [
+  {
+    n:21, diff:'easy',
+    q:'Selective Search is a neural network trained end-to-end alongside the detection backbone in R-CNN.',
+    ans:false,
+    fb_correct:'Correct — False. Selective Search is a <strong>hand-crafted heuristic algorithm</strong>, not a neural network. It groups image regions based on colour, texture, and size similarity. It runs independently on CPU and is not differentiable — it cannot be trained. This limitation motivated the RPN in Faster R-CNN.',
+    fb_wrong:'This is False. Selective Search is a <strong>traditional computer vision algorithm</strong> based on hierarchical region merging heuristics. It is completely separate from the CNN — it runs on CPU before the CNN even processes anything, and it has no learnable parameters.'
+  },
+  {
+    n:22, diff:'medium',
+    q:'In NMS with IoU threshold 0.7, a box scoring 0.85 will always be kept in the final output regardless of other detections.',
+    ans:false,
+    fb_correct:'Correct — False. A box with score 0.85 can still be <strong>suppressed</strong> if a higher-scoring box (e.g. 0.95) is selected first and has IoU > 0.7 with it. NMS is not a simple threshold on scores — it uses relative scoring within overlapping neighbourhoods.',
+    fb_wrong:'This is False. NMS suppresses boxes based on <strong>relative overlap with higher-scoring boxes</strong>, not absolute score. A score-0.85 box can be eliminated if a score-0.95 box overlaps it with IoU > 0.7. The 0.7 threshold applies to IoU, not to the confidence score.'
+  },
+  {
+    n:23, diff:'easy',
+    q:'IoU = 1.0 is achievable only when the predicted bounding box perfectly coincides with the ground truth box.',
+    ans:true,
+    fb_correct:'Correct — True. IoU = Area of Intersection / Area of Union. When predicted and GT boxes are <strong>identical</strong>, intersection = union = the box area. Therefore IoU = 1.0. Any deviation in position or size reduces the intersection while increasing the union, giving IoU < 1.0.',
+    fb_wrong:'This is True. IoU = Intersection/Union. Perfect coincidence means Intersection = Union = the box area → IoU = 1.0. The only way to achieve IoU = 1.0 is when both boxes are exactly the same rectangle.'
+  },
+  {
+    n:24, diff:'hard',
+    q:'In Fast R-CNN, the per-region FC network performs most of the computational work because it processes each of the ~2000 RoIs independently.',
+    ans:false,
+    fb_correct:'Correct — False. The <strong>backbone CNN performs most computation</strong>, but it runs only once. The per-region FC network is lightweight (e.g. two FC layers) and runs 2000 times cheaply. The key efficiency gain is that heavy backbone computation is shared — this is the entire point of Fast R-CNN over R-CNN.',
+    fb_wrong:'This is False. The key insight of Fast R-CNN is that the <strong>backbone does most of the computation but runs only once</strong>. The per-region FC layers are deliberately lightweight. Running 2000 times is acceptable because each per-region forward pass is inexpensive compared to a full backbone pass.'
+  },
+  {
+    n:25, diff:'medium',
+    q:'An anchor box labelled with IoU = 0.45 against all ground truth boxes would be used as a negative (background) example during RPN training.',
+    ans:false,
+    fb_correct:'Correct — False. IoU = 0.45 falls in the <strong>ignored zone</strong> (0.3 < IoU < 0.7). Such anchors are neither positive nor negative — they are excluded from the RPN classification loss entirely. Only anchors with IoU ≥ 0.7 (positive) or IoU ≤ 0.3 (negative) contribute to training.',
+    fb_wrong:'This is False. IoU = 0.45 is between the 0.3 and 0.7 thresholds. RPN training has three labels: <strong>Positive</strong> (IoU ≥ 0.7), <strong>Negative</strong> (IoU ≤ 0.3), <strong>Ignored</strong> (0.3 < IoU < 0.7). The 0.45 anchor is simply ignored — not used in the loss function at all.'
+  },
+  {
+    n:26, diff:'hard',
+    q:'The exponential function in b_w = p_w · exp(t_w) is used specifically to prevent the predicted bounding box from extending outside the image boundaries.',
+    ans:false,
+    fb_correct:'Correct — False. The exponential is used to guarantee <strong>positive box dimensions</strong> — no matter what value t_w takes, exp(t_w) > 0, so b_w > 0 always. It also provides log-space scale invariance. Preventing boxes from going outside image boundaries is handled separately (by clamping coordinates), not by the exponential.',
+    fb_wrong:'This is False. The exponential in b_w = p_w · exp(t_w) serves two purposes: (1) guaranteeing <strong>positive width/height</strong> regardless of t_w\'s sign, and (2) log-space parameterisation for scale invariance. Image boundary clamping is a separate post-processing step entirely unrelated to the regression formula.'
+  },
+  {
+    n:27, diff:'medium',
+    q:'In R-CNN, all ~2000 region proposals share the same CNN feature computation through a single forward pass of the backbone network.',
+    ans:false,
+    fb_correct:'Correct — False. This is precisely what makes R-CNN slow! Each of the ~2000 warped regions is passed <strong>independently</strong> through the full CNN — 2000 separate forward passes. Sharing a single backbone pass is the innovation of <strong>Fast R-CNN</strong>, not R-CNN.',
+    fb_wrong:'This is False and describes Fast R-CNN, not R-CNN. In original R-CNN, each region is warped to 224×224 and run through the CNN <strong>independently</strong> — ~2000 full forward passes per image. This is why R-CNN takes ~47 seconds per image at test time.'
+  },
+  {
+    n:28, diff:'easy',
+    q:'Average Precision (AP) is computed as the area under the Precision-Recall curve for a single object category.',
+    ans:true,
+    fb_correct:'Correct — True. AP is defined as the <strong>area under the PR curve</strong> for one category. The curve is built by processing detections from highest to lowest confidence score, plotting (Recall, Precision) at each step. mAP is then the mean of AP across all categories.',
+    fb_wrong:'This is True. AP = area under the Precision-Recall curve, computed per category. The curve traces precision at each recall level as you lower the detection threshold. The area under this curve summarises detector quality across all operating points.'
+  },
+  {
+    n:29, diff:'hard',
+    q:'Faster R-CNN uses two completely separate backbone networks — one for the RPN and one for the detection head — to avoid interference between the two tasks.',
+    ans:false,
+    fb_correct:'Correct — False. The <strong>backbone is shared</strong> between the RPN and the detection head. This is a core design choice: one backbone pass produces the feature map, and both the RPN (proposal generation) and the per-region network (classification/regression) read from this single shared representation. Using two separate backbones would double computation.',
+    fb_wrong:'This is False. Faster R-CNN uses a <strong>single shared backbone</strong>. The feature map produced by one backbone forward pass is consumed by both the RPN and the detection head. This sharing is what makes Faster R-CNN efficient — the expensive backbone runs only once per image.'
+  },
+  {
+    n:30, diff:'medium',
+    q:'A lower IoU threshold in NMS (e.g. 0.3 instead of 0.7) is more likely to accidentally remove valid detections of two nearby but distinct objects.',
+    ans:true,
+    fb_correct:'Correct — True. A <strong>lower IoU threshold</strong> suppresses boxes that overlap even slightly. If two different objects are physically close (e.g. two people standing together), their detection boxes may overlap with IoU around 0.4. A threshold of 0.3 would suppress one of them; a threshold of 0.7 would correctly keep both.',
+    fb_wrong:'This is True. Lower IoU threshold = more aggressive suppression. If two legitimate objects are nearby, their boxes may have moderate overlap (IoU ~0.35). With threshold=0.3, the lower-scoring box gets suppressed — a false suppression. With threshold=0.7, both boxes survive since their IoU (0.35) is below the threshold.'
+  }
+];
+
+/* ══════════════════════
+   EXAM RENDERING
+══════════════════════ */
+let examState = {answered:0, correct:0, wrong:0};
+const TOTAL = 30;
+
+function renderExam(){
+  const mc = document.getElementById('mcq-container');
+  const tf = document.getElementById('tf-container');
+  MCQ.forEach(q => { mc.appendChild(buildMC(q)); });
+  TF.forEach(q  => { tf.appendChild(buildTF(q)); });
+}
+
+function diffBadge(d){
+  return `<span class="diff-badge diff-${d}">${d}</span>`;
+}
+
+function buildMC(q){
+  const div = document.createElement('div');
+  div.className = 'question';
+  div.id = 'q'+q.n;
+  const letters = ['A','B','C','D'];
+  div.innerHTML = `
+    <div class="q-header">
+      <span class="q-num">${q.n}.</span>
+      <span class="q-text">${q.q}</span>
+      ${diffBadge(q.diff)}
+    </div>
+    <div class="options" id="opts${q.n}">
+      ${q.opts.map((o,i)=>`
+        <div class="opt" id="opt${q.n}_${i}" onclick="answerMC(${q.n},${i})">
+          <span class="opt-letter">${letters[i]}</span>
+          <span>${o}</span>
+        </div>`).join('')}
+    </div>
+    <div id="fb${q.n}"></div>
+  `;
+  return div;
+}
+
+function buildTF(q){
+  const div = document.createElement('div');
+  div.className = 'question';
+  div.id = 'q'+q.n;
+  div.innerHTML = `
+    <div class="q-header">
+      <span class="q-num">${q.n}.</span>
+      <span class="q-text">${q.q}</span>
+      ${diffBadge(q.diff)}
+    </div>
+    <div class="tf-wrap" id="tf${q.n}">
+      <button class="tf-btn" id="tft${q.n}" onclick="answerTF(${q.n},true)">TRUE</button>
+      <button class="tf-btn" id="tff${q.n}" onclick="answerTF(${q.n},false)">FALSE</button>
+    </div>
+    <div id="fb${q.n}"></div>
+  `;
+  return div;
+}
+
+const answered = {};
+
+function answerMC(qn, chosen){
+  if(answered[qn]) return;
+  answered[qn] = true;
+  const q = MCQ.find(x=>x.n===qn);
+  const isCorrect = chosen === q.ans;
+  updateStats(isCorrect);
+
+  const opts = document.querySelectorAll(`#opts${qn} .opt`);
+  opts.forEach(o=>o.classList.add('locked'));
+  document.getElementById(`opt${qn}_${chosen}`).classList.add(isCorrect?'correct-opt':'wrong-opt');
+  if(!isCorrect) document.getElementById(`opt${qn}_${q.ans}`).classList.add('reveal-opt');
+
+  showFeedback(qn, isCorrect, q.fb_correct, q.fb_wrong);
+}
+
+function answerTF(qn, chosen){
+  if(answered[qn]) return;
+  answered[qn] = true;
+  const q = TF.find(x=>x.n===qn);
+  const isCorrect = chosen === q.ans;
+  updateStats(isCorrect);
+
+  document.getElementById(`tft${qn}`).classList.add('locked');
+  document.getElementById(`tff${qn}`).classList.add('locked');
+  if(chosen===true)  document.getElementById(`tft${qn}`).classList.add(isCorrect?'correct-opt':'wrong-opt');
+  if(chosen===false) document.getElementById(`tff${qn}`).classList.add(isCorrect?'correct-opt':'wrong-opt');
+  if(!isCorrect){
+    const correctEl = q.ans===true ? document.getElementById(`tft${qn}`) : document.getElementById(`tff${qn}`);
+    correctEl.classList.add('reveal-opt');
+  }
+
+  showFeedback(qn, isCorrect, q.fb_correct, q.fb_wrong);
+}
+
+function showFeedback(qn, isCorrect, fc, fw){
+  const fb = document.getElementById('fb'+qn);
+  fb.innerHTML = `<div class="feedback ${isCorrect?'fb-correct':'fb-wrong'}">
+    <div class="fb-head ${isCorrect?'ch':'fx'}">${isCorrect?'✓ Correct':'✗ Incorrect'}</div>
+    ${isCorrect?fc:fw}
+  </div>`;
+}
+
+function updateStats(isCorrect){
+  examState.answered++;
+  if(isCorrect) examState.correct++; else examState.wrong++;
+  document.getElementById('s-ans').textContent = examState.answered;
+  document.getElementById('s-cor').textContent = examState.correct;
+  document.getElementById('s-wrg').textContent = examState.wrong;
+  document.getElementById('s-rem').textContent = TOTAL - examState.answered;
+  const pct = Math.round(examState.answered/TOTAL*100);
+  document.getElementById('progFill').style.width = pct+'%';
+  document.getElementById('prog-pct').textContent = pct+'%';
+}
+
+function submitExam(){
+  // Highlight unanswered
+  [...MCQ,...TF].forEach(q=>{
+    if(!answered[q.n]){
+      const el = document.getElementById('q'+q.n);
+      el.style.background='rgba(192,57,43,0.04)';
+      el.style.borderLeft='3px solid '+getComputedStyle(document.documentElement).getPropertyValue('--red');
+      el.scrollIntoView({behavior:'smooth',block:'center'});
+    }
+  });
+
+  const sc = examState.correct;
+  const pct = Math.round(sc/TOTAL*100);
+  let grade, msg, col;
+  if(pct>=90){grade='A — Distinction';msg='Outstanding performance. You demonstrate mastery of object detection concepts.';col='var(--green)'}
+  else if(pct>=80){grade='B — Merit';msg='Strong understanding across most topics. Review the hard questions carefully.';col='var(--blue)'}
+  else if(pct>=70){grade='C — Pass';msg='Adequate grasp of core concepts. Strengthen understanding of mathematical derivations.';col='var(--gold)'}
+  else if(pct>=60){grade='D — Marginal';msg='Foundational concepts understood but significant gaps remain. Revise R-CNN architecture and mAP carefully.';col='var(--gold)'}
+  else{grade='F — Fail';msg='Substantial revision required across all topics. Focus on IoU, mAP computation, and R-CNN family architecture.';col='var(--red)'}
+
+  const banner = document.getElementById('scoreBanner');
+  document.getElementById('sb-num').textContent = sc;
+  const grEl = document.getElementById('sb-grade');
+  grEl.textContent = grade; grEl.style.color = col;
+  document.getElementById('sb-msg').textContent = msg;
+  banner.classList.add('show');
+  banner.scrollIntoView({behavior:'smooth'});
+}
+
+/* ══════════════════════
+   FLASHCARD DATA
+══════════════════════ */
+const CARDS = [
+  {topic:'Task Definition', q:'What is the formal output of an object detector for a single image?', a:'A set of detected objects, each with: (1) a <strong>category label</strong> from a fixed class set, and (2) a <strong>bounding box</strong> (x, y, w, h) where (x,y) is the top-left corner.'},
+  {topic:'Sliding Window', q:'What is the exact formula for the total number of possible bounding boxes in an H×W image?', a:'<code>H(H+1)/2 · W(W+1)/2</code>\n\nFor 800×600: ≈ <strong>58 million</strong> boxes — making brute-force CNN evaluation completely infeasible.'},
+  {topic:'Region Proposals', q:'What does Selective Search do, and what is its output?', a:'Selective Search is a <strong>CPU heuristic</strong> that groups image regions by colour, texture, size, and fill similarity. Output: ~<strong>2000 region proposals</strong> (RoIs) per image in a few seconds. Not learned — later replaced by RPN.'},
+  {topic:'IoU', q:'State the IoU formula and the three standard quality thresholds.', a:'<code>IoU = Area of Intersection / Area of Union</code>\n\n• IoU > 0.5 → "decent"\n• IoU > 0.7 → "pretty good"\n• IoU > 0.9 → "almost perfect"\n\nAlso called <strong>Jaccard Similarity</strong>.'},
+  {topic:'IoU', q:'Why is IoU preferred over comparing raw coordinates for bounding box evaluation?', a:'IoU is (1) <strong>scale-invariant</strong> — same quality score regardless of box size, and (2) <strong>bounded [0,1]</strong> — easy to interpret and threshold. Raw coordinate differences are scale-dependent and do not capture relative overlap.'},
+  {topic:'NMS', q:'Describe the Non-Max Suppression algorithm step by step.', a:'1. Sort all detection boxes by <strong>score descending</strong>\n2. Select the <strong>highest-scoring box</strong> → keep it\n3. <strong>Suppress</strong> all boxes with IoU > threshold (duplicates)\n4. Repeat from step 2 with remaining boxes\n5. Stop when no boxes remain'},
+  {topic:'R-CNN', q:'What are the 4 stages of the R-CNN pipeline?', a:'1. <strong>Selective Search</strong> → ~2000 RoIs\n2. <strong>Warp</strong> each RoI to 224×224\n3. <strong>CNN</strong> forward pass per region → 4096-d feature\n4. <strong>SVM/Softmax</strong> classifier + <strong>BBox regressor</strong> per region'},
+  {topic:'R-CNN', q:'In R-CNN bbox regression, what are the formulas for final box position and size?', a:'Position: <code>bₓ = pₓ + p_w·tₓ</code> and <code>bᵧ = pᵧ + p_h·tᵧ</code>\n\nSize: <code>b_w = p_w·exp(t_w)</code> and <code>b_h = p_h·exp(t_h)</code>\n\nExp ensures <strong>positive dimensions</strong> and provides scale invariance.'},
+  {topic:'mAP', q:'Explain how Average Precision (AP) is computed for one category.', a:'1. Collect all detections, <strong>sort by confidence</strong> (high→low)\n2. For each detection: mark as TP (IoU>0.5 with unused GT) or FP\n3. Compute running Precision and Recall, <strong>plot PR curve</strong>\n4. AP = <strong>area under the PR curve</strong>'},
+  {topic:'mAP', q:'What is the difference between mAP@0.5 and COCO mAP?', a:'<strong>mAP@0.5</strong>: AP computed using IoU threshold = 0.5. Lenient.\n\n<strong>COCO mAP</strong>: Average of mAP@{0.50, 0.55, 0.60, …, 0.95}. Strict — rewards precise box alignment. A model scoring 0.77@0.5 may score only 0.40 COCO.'},
+  {topic:'Fast R-CNN', q:'What is the key architectural difference between R-CNN and Fast R-CNN?', a:'<strong>R-CNN</strong>: runs CNN independently on each of ~2000 warped regions (~2000 forward passes)\n\n<strong>Fast R-CNN</strong>: runs backbone CNN <strong>once</strong> on full image → shared feature map → RoI Pooling extracts per-region features. ~10× faster training, ~150× faster test time.'},
+  {topic:'Fast R-CNN', q:'Describe the RoI Pooling operation in Fast R-CNN.', a:'1. <strong>Project</strong> RoI from image to feature map (divide by stride)\n2. <strong>Snap</strong> to nearest integer grid cells\n3. <strong>Divide</strong> snapped region into H×W subregions (e.g. 7×7)\n4. <strong>Max-pool</strong> each subregion → fixed 512×7×7 output\n\nGuarantees fixed-size output regardless of RoI size.'},
+  {topic:'Fast R-CNN', q:'What is the computational bottleneck of Fast R-CNN at test time, and what are the speeds?', a:'The bottleneck is <strong>Selective Search region proposals</strong> on CPU (~2 seconds of the total ~2.3 sec/image).\n\nWithout proposals: <strong>0.32 sec/image</strong>\nWith proposals: <strong>2.3 sec/image</strong>\n\nThis motivated the RPN in Faster R-CNN.'},
+  {topic:'Faster R-CNN', q:'What does the Region Proposal Network (RPN) replace, and why is it better?', a:'RPN replaces <strong>Selective Search</strong>.\n\nAdvantages:\n• Runs on <strong>GPU</strong> (milliseconds vs seconds)\n• <strong>Learned</strong> from data — not hand-crafted\n• <strong>Shares backbone</strong> with detection head\n• Outputs ~300 proposals (vs 2000 from SS)'},
+  {topic:'Faster R-CNN', q:'What are anchor boxes in the RPN, and how many are typically used?', a:'Anchor boxes are <strong>predefined rectangles</strong> of K different scales and aspect ratios placed at every feature map location.\n\nTypically K=9 (3 scales × 3 ratios: 1:1, 1:2, 2:1)\n\nFor a 20×15 feature map: <strong>9×300 = 2700 total anchors</strong>'},
+  {topic:'Faster R-CNN', q:'What are the RPN\'s two output branches and their shapes (for K anchors, H×W feature map)?', a:'1. <strong>Classification branch</strong>: objectness score per anchor → shape <code>K×H×W</code>\n\n2. <strong>Regression branch</strong>: 4 transform offsets per anchor → shape <code>4K×H×W</code>\n\nFor K=9, 20×15: cls=9×20×15, reg=36×20×15'},
+  {topic:'Faster R-CNN', q:'How are anchors labelled during RPN training?', a:'• <strong>Positive</strong>: IoU ≥ 0.7 with any GT box → object present\n• <strong>Negative</strong>: IoU ≤ 0.3 with all GT boxes → background\n• <strong>Ignored</strong>: 0.3 < IoU < 0.7 → not used in loss\n\nRPN regression is only applied to positive anchors.'},
+  {topic:'Architecture Comparison', q:'Compare R-CNN, Fast R-CNN, and Faster R-CNN on training time and test time.', a:'| Model | Train | Test |\n|---|---|---|\n| R-CNN | 84 hrs | 49 sec |\n| Fast R-CNN | 8.75 hrs | 2.3 sec |\n| Faster R-CNN | ~10 hrs | ~0.2 sec |\n\nKey: each generation solves a different bottleneck.'},
+  {topic:'Architecture Comparison', q:'What are the 4 jointly-trained losses in Faster R-CNN?', a:'1. <strong>RPN Classification</strong>: anchor objectness (binary)\n2. <strong>RPN Regression</strong>: anchor → proposal offset\n3. <strong>Detection Classification</strong>: final class (softmax)\n4. <strong>Detection Regression</strong>: proposal → final box offset\n\nAll four backpropagate through the shared backbone.'},
+  {topic:'Challenges', q:'What are the 3 core challenges that make object detection harder than classification?', a:'1. <strong>Variable outputs</strong>: different images need different numbers of predictions\n\n2. <strong>Multi-output types</strong>: must predict "what" (classification) AND "where" (regression) simultaneously\n\n3. <strong>Large images</strong>: needs ~800×600 vs 224×224 for classification'},
+];
+
+/* ══════════════════════
+   FLASHCARD LOGIC
+══════════════════════ */
+let flState = {
+  cur: 0,
+  flipped: false,
+  filter: 'All',
+  seen: new Set(),
+  filtered: []
+};
+
+function initFlash(){
+  const topics = ['All', ...new Set(CARDS.map(c=>c.topic))];
+  const fb = document.getElementById('filterBar');
+  topics.forEach(t=>{
+    const btn = document.createElement('button');
+    btn.className = 'filter-btn' + (t==='All'?' active':'');
+    btn.textContent = t;
+    btn.onclick = ()=>setFilter(t);
+    fb.appendChild(btn);
+  });
+  flState.filtered = [...CARDS];
+  document.getElementById('fl-tot').textContent = CARDS.length;
+  renderCard();
+}
+
+function setFilter(topic){
+  flState.filter = topic;
+  flState.cur = 0;
+  flState.flipped = false;
+  flState.filtered = topic==='All' ? [...CARDS] : CARDS.filter(c=>c.topic===topic);
+  document.querySelectorAll('.filter-btn').forEach(b=>{
+    b.classList.toggle('active', b.textContent===topic);
+  });
+  document.getElementById('fl-tot').textContent = flState.filtered.length;
+  renderCard();
+}
+
+function renderCard(){
+  const cards = flState.filtered;
+  if(!cards.length) return;
+  const c = cards[flState.cur];
+  flState.seen.add(flState.cur+'-'+flState.filter);
+
+  document.getElementById('cTopicF').textContent = c.topic.toUpperCase();
+  document.getElementById('cTopicB').textContent = c.topic.toUpperCase() + ' — ANSWER';
+  document.getElementById('cQuestion').textContent = c.q;
+  document.getElementById('cAnswer').innerHTML = c.a.replace(/\n/g,'<br>');
+
+  const scene = document.getElementById('cardScene');
+  scene.classList.toggle('flipped', flState.flipped);
+
+  const i = flState.cur, n = cards.length;
+  document.getElementById('fl-cur').textContent = i+1;
+  document.getElementById('fl-tot').textContent = n;
+  document.getElementById('fl-label').textContent = `Card ${i+1} of ${n}`;
+  document.getElementById('flProgFill').style.width = ((i+1)/n*100)+'%';
+  document.getElementById('prevBtn').disabled = i===0;
+  document.getElementById('nextBtn').disabled = i===n-1;
+
+  const seen = new Set([...flState.seen].filter(s=>s.endsWith('-'+flState.filter))).size;
+  document.getElementById('fl-seen').textContent = seen;
+  document.getElementById('fl-unseen').textContent = n - seen;
+  document.getElementById('fl-studied').textContent = seen + ' studied';
+}
+
+function flipCard(){
+  flState.flipped = !flState.flipped;
+  renderCard();
+}
+
+function flashNav(dir){
+  const n = flState.filtered.length;
+  flState.cur = Math.max(0, Math.min(n-1, flState.cur+dir));
+  flState.flipped = false;
+  renderCard();
+}
+
+function handleCardKey(e){
+  if(e.key==='ArrowRight') flashNav(1);
+  else if(e.key==='ArrowLeft') flashNav(-1);
+  else if(e.key===' '){e.preventDefault();flipCard();}
+}
+
+document.addEventListener('keydown', e=>{
+  if(document.getElementById('flash-section').classList.contains('active')){
+    if(e.key==='ArrowRight') flashNav(1);
+    else if(e.key==='ArrowLeft') flashNav(-1);
+    else if(e.key===' '&&document.activeElement!==document.getElementById('cardScene')){
+      e.preventDefault(); flipCard();
+    }
+  }
+});
+
+renderExam();
+initFlash();
+</script>
+</body>
+</html>
